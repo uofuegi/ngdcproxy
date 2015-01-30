@@ -9,6 +9,11 @@ var https = require('https'),
     log4js = require('log4js'),
     testDir = path.join(__dirname, 'test', 'ssl');
 console.log("configure log4js");
+var logDir = "./logs";
+if (!fs.existsSync(logDir)) {
+    console.log("no log folder");
+    fs.mkdirSync(logDir);
+}
 log4js.configure({
     appenders: [
         { type: 'console' },
