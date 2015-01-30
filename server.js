@@ -31,8 +31,8 @@ var logger = log4js.getLogger('testing');
 //logger.setLevel('INFO');
 console.log("logger retrieved");
 logger.info("requires loaded");
-var port = 80;
-//var port = process.env.port || 1333;
+//var port = 80;
+var port = process.env.port || 1333;
 var options = {
     target: {
         host: 'maps.ngdc.noaa.gov',
@@ -46,5 +46,8 @@ var options = {
         cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
     }
 };
-httpProxy.createServer(options).listen(port);
+var proxy = httpProxy.createServer(options).listen(port);
+proxy.on("error", function() {
+   logger.error("error!!!");
+});
 logger.info('listening port: '+ port);
