@@ -1,3 +1,4 @@
+console.log('started');
 var https = require('https'),
     http = require('http'),
     util  = require('util'),
@@ -6,6 +7,7 @@ var https = require('https'),
     fs    = require('fs'),
     httpProxy = require('http-proxy'),
     testDir = path.join(__dirname, 'test', 'ssl');
+console.log('requires loaded');
 var port = process.env.port || 1333;
 var options = {
     target: {
@@ -20,6 +22,8 @@ var options = {
         cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
     }
 };
+console.log('listening port: '+ port);
+
 httpProxy.createServer(options).listen(port);
 //var proxy = httpProxy.createProxy()
 //httpProxy.createServer(function(req, res) {
