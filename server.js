@@ -1,13 +1,22 @@
-var http = require('http'),
-    httpProxy = require('http-proxy');
-var port = process.env.port || 1337;
-//http.createServer(function(req, res) {
-//  res.writeHead(200, { 'Content-Type': 'text/plain' });
-//  res.end('Hello World\n');
-//}).listen(port);
+var https = require('https'),
+    http = require('http'),
+    util  = require('util'),
+    path  = require('path'),
+    url = require('url');
+    fs    = require('fs'),
+    httpProxy = require('http-proxy'),
+    testDir = path.join(__dirname, 'test', 'ssl');
+var port = process.env.port || 1333;
 httpProxy.createServer({
-    target: 'https://google.com',
+    target: {
+        host: 'maps.ngdc.noaa.gov',
+        port: 80
+    },
     headers: {
-        host: 'google.com'
+        host: 'maps.ngdc.noaa.gov'
+    },
+    ssl: {
+        key: fs.readFileSync(path.join(testDir, 'agent2-key.pem'), 'utf8'),
+        cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
     }
 }).listen(port);
