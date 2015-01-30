@@ -50,4 +50,7 @@ var proxy = httpProxy.createServer(options).listen(port);
 proxy.on("error", function() {
    logger.error("error!!!");
 });
+proxy.on('proxyReq', function() {
+   logger.info("proxy inbound");
+});
 logger.info('listening port: '+ port);
