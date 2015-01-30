@@ -27,13 +27,12 @@ log4js.configure({
     ],
     replaceConsole: true
 });
-//log4js.loadAppender('file');
 var logger = log4js.getLogger('testing');
 //logger.setLevel('INFO');
 console.log("logger retrieved");
 logger.info("requires loaded");
-//log4js.shutdown(function() { process.exit(1); });
-var port = process.env.port || 1333;
+var port = 80;
+//var port = process.env.port || 1333;
 var options = {
     target: {
         host: 'maps.ngdc.noaa.gov',
