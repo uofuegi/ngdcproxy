@@ -25,9 +25,3 @@ var options = {
 console.log('listening port: '+ port);
 
 httpProxy.createServer(options).listen(port);
-//var proxy = httpProxy.createProxy()
-//httpProxy.createServer(function(req, res) {
-//    console.log('test console logging');
-//    //proxy.web(req, res, options);
-//}).listen(1334);
-//console.log('test console logging');
