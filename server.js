@@ -1,5 +1,5 @@
-var http = require('http'),
-    httpProxy = require('http-proxy');
+var http = require('http');
+    //httpProxy = require('http-proxy');
 var port = process.env.port || 1337;
 http.createServer(function(req, res) {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
