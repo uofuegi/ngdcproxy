@@ -6,8 +6,28 @@ var https = require('https'),
     url = require('url');
     fs    = require('fs'),
     httpProxy = require('http-proxy'),
+    log4js = require('log4js'),
     testDir = path.join(__dirname, 'test', 'ssl');
-console.log('requires loaded');
+console.log("configure log4js");
+log4js.configure({
+    appenders: [
+        { type: 'console' },
+        {
+            type: 'file',
+            filename: 'logs/startup.log',
+            "maxLogSize": 20480,
+            "backups": 3
+            //category: ['startup','console']
+        }
+    ],
+    replaceConsole: true
+});
+//log4js.loadAppender('file');
+var logger = log4js.getLogger('testing');
+//logger.setLevel('INFO');
+console.log("logger retrieved");
+logger.info("requires loaded");
+//log4js.shutdown(function() { process.exit(1); });
 var port = process.env.port || 1333;
 var options = {
     target: {
@@ -22,6 +42,5 @@ var options = {
         cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
     }
 };
-console.log('listening port: '+ port);
-
 httpProxy.createServer(options).listen(port);
+logger.info('listening port: '+ port);
