@@ -35,8 +35,8 @@ logger.info("requires loaded");
 var port = process.env.port || 1333;
 var options = {
     target: {
-        host: 'maps.ngdc.noaa.gov',
-        port: 80
+        host: 'maps.ngdc.noaa.gov'//,
+        //port: 80
     },
     headers: {
         host: 'maps.ngdc.noaa.gov'
