@@ -40,11 +40,11 @@ var options = {
     },
     headers: {
         host: 'maps.ngdc.noaa.gov'
-    },
-    ssl: {
-        key: fs.readFileSync(path.join(testDir, 'agent2-key.pem'), 'utf8'),
-        cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
-    }
+    }//,
+    //ssl: {
+    //    key: fs.readFileSync(path.join(testDir, 'agent2-key.pem'), 'utf8'),
+    //    cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
+    //}
 };
 var proxy = httpProxy.createServer(options).listen(port);
 proxy.on("error", function() {
