@@ -48,7 +48,8 @@ var options = {
 //var proxy = httpProxy.createServer(options).listen(port);
 var proxies = {
   'ngdc': { site: 'maps.ngdc.noaa.gov' },
-  'sub': { site: 'google.com' }
+  'pangea': { site: 'pangea.de' },
+  'utig': { site: 'ig.utexas.edu' }
 };
 for (context in proxies) {
   var url = proxies[context].site;
