@@ -36,7 +36,6 @@ var port = process.env.port || 1333;
 var options = {
     target: {
         host: 'maps.ngdc.noaa.gov'//,
-        //port: 80
     },
     headers: {
         host: 'maps.ngdc.noaa.gov'
@@ -46,7 +45,47 @@ var options = {
     //    cert: fs.readFileSync(path.join(testDir, 'agent2-cert.pem'), 'utf8')
     //}
 };
-var proxy = httpProxy.createServer(options).listen(port);
+//var proxy = httpProxy.createServer(options).listen(port);
+var proxies = {
+  'ngdc': { site: 'maps.ngdc.noaa.gov' },
+  'test': { site: 'google.com' }
+};
+for (context in proxies) {
+  var url = proxies[context].site;
+  proxies[context].proxyServer = new httpProxy.createProxyServer({
+    target: {
+        host: url
+    },
+    headers: {
+        host: url
+    }
+  });
+}
+// E.g. localhost:1333/ngdc/arcgis/rest/services
+var proxy = http.createServer(function (req, res) {
+  logger.info(req.url);
+  //grab the first thing in the url. This will tell us what to proxy
+  // E.g. With localhost:1333/ngdc/arcgis/rest/services the context will be ngdc
+  var urlArray = req.url.split('/');
+      context = urlArray[1]; 
+  logger.info(req.url);
+  if (proxies[context]) {
+    //remove the part of the url that tells us what to proxy
+    // E.g. With localhost:1333/ngdc/arcgis/rest/services has the url /ngdc/arcgis/rest/services but we want to proxy /arcgis/rest/services
+    urlArray.splice(0,2);
+    var proxyUrl = "/" + urlArray.join('/');
+    logger.info("proxyUrl:"+ proxyUrl);
+    req.url = proxyUrl;
+    proxies[context].proxyServer.web(req,res);
+  }
+  else {
+    var allowedContexts = "";
+    for (proxyContext in proxies) {
+      allowedContexts += " " + proxyContext;
+    }
+    logger.error("invalid request context(" + context + "). It has to be one of the following:" + allowedContexts);
+  }
+}).listen(port);
 proxy.on("error", function() {
    logger.error("error!!!");
 });
