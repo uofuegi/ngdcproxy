@@ -48,7 +48,7 @@ var options = {
 //var proxy = httpProxy.createServer(options).listen(port);
 var proxies = {
   'ngdc': { site: 'maps.ngdc.noaa.gov' },
-  'test': { site: 'google.com' }
+  'sub': { site: 'google.com' }
 };
 for (context in proxies) {
   var url = proxies[context].site;
@@ -63,12 +63,14 @@ for (context in proxies) {
 }
 // E.g. localhost:1333/ngdc/arcgis/rest/services
 var proxy = http.createServer(function (req, res) {
-  logger.info(req.url);
+  logger.info("url: " + req.url);
+  
   //grab the first thing in the url. This will tell us what to proxy
   // E.g. With localhost:1333/ngdc/arcgis/rest/services the context will be ngdc
   var urlArray = req.url.split('/');
-      context = urlArray[1]; 
-  logger.info(req.url);
+      context = urlArray[1],
+      subdomain = req.headers.host.split('.')[0];
+  logger.info("subdomain: " + req.headers.host.split('.')[0]);
   if (proxies[context]) {
     //remove the part of the url that tells us what to proxy
     // E.g. With localhost:1333/ngdc/arcgis/rest/services has the url /ngdc/arcgis/rest/services but we want to proxy /arcgis/rest/services
@@ -77,6 +79,10 @@ var proxy = http.createServer(function (req, res) {
     logger.info("proxyUrl:"+ proxyUrl);
     req.url = proxyUrl;
     proxies[context].proxyServer.web(req,res);
+  }
+  else if (proxies[subdomain]) {
+    logger.info("proxySubdomain: " + subdomain);
+    proxies[subdomain].proxyServer.web(req,res);
   }
   else {
     var allowedContexts = "";
